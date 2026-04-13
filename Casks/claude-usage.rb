@@ -11,6 +11,12 @@ cask "claude-usage" do
 
   app "ClaudeUsage.app"
 
+  caveats <<~EOS
+    The app is not notarized. macOS will block it on first launch.
+    Run this to allow it:
+      xattr -d com.apple.quarantine /Applications/ClaudeUsage.app
+  EOS
+
   zap trash: [
     "~/Library/Preferences/com.github.posalex.claudeusage.plist",
     "~/Library/Application Support/ClaudeUsage",

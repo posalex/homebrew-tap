@@ -1,6 +1,6 @@
 cask "claude-usage" do
   version "1.0.0"
-  sha256 "f4a69a7712faeeaf5c178f2c74333859ee1899dd7de668386791200fa0a97767"
+  sha256 "42a29ed335becb81a364c9472941b16b654251e10cac6ad3fae8cebeb73db349"
 
   url "https://github.com/posalex/ClaudeUsage/releases/download/v#{version}/ClaudeUsage.zip"
   name "Claude Usage"
@@ -12,7 +12,7 @@ cask "claude-usage" do
   app "ClaudeUsage.app"
 
   zap trash: [
-    "~/Library/Preferences/de.fashion-digital.claudeusage.plist",
+    "~/Library/Preferences/com.github.posalex.claudeusage.plist",
     "~/Library/Application Support/ClaudeUsage",
   ]
 end

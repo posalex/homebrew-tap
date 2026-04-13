@@ -4,7 +4,7 @@ cask "claude-usage" do
 
   url "https://github.com/posalex/ClaudeUsage/releases/download/v#{version}/ClaudeUsage.zip"
   name "Claude Usage"
-  desc "macOS menu bar widget showing Claude AI usage statistics"
+  desc "macOS menu bar widget showing claude.ai subscription usage and rate limits"
   homepage "https://github.com/posalex/ClaudeUsage"
 
   depends_on macos: ">= :ventura"

@@ -55,6 +55,13 @@ class JiraMcpServer < Formula
       system "make", "-C", libexec, "build"
       system "make", "-C", libexec, "xpi"
     end
+
+    # Restart proxy service if it was running (so it picks up the new code)
+    plist = Pathname.new(Dir.home)/"Library/LaunchAgents/com.jira-mcp.proxy.plist"
+    if plist.exist?
+      system "launchctl", "unload", plist.to_s
+      system "launchctl", "load", plist.to_s
+    end
   end
 
   def caveats

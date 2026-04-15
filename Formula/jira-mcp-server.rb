@@ -3,8 +3,8 @@ class JiraMcpServer < Formula
 
   desc "Jira MCP server with Firefox cookie bridge and HTTP proxy for IDEs"
   homepage "https://github.com/posalex/jira-mcp-server"
-  url "https://github.com/posalex/jira-mcp-server/archive/refs/tags/v0.6.1.tar.gz"
-  sha256 "f19d983823bf7b653e79d16ffb8bdc13eea2285135e9632d7a7d9886d14fbce7"
+  url "https://github.com/posalex/jira-mcp-server/archive/refs/tags/v0.7.0.tar.gz"
+  sha256 "a0adeef10bb9eaea4075198d72ca6067b7463529ee51bf13911d9640ac858920"
   license "GPL-3.0-or-later"
 
   depends_on "python@3.12"

@@ -1,4 +1,6 @@
 class JiraMcpServer < Formula
+  include Language::Python::Virtualenv
+
   desc "Jira MCP server with Firefox cookie bridge extension"
   homepage "https://github.com/posalex/jira-mcp-server"
   url "https://github.com/posalex/jira-mcp-server/archive/refs/tags/v0.1.0.tar.gz"
@@ -8,19 +10,16 @@ class JiraMcpServer < Formula
   depends_on "python@3.12"
 
   def install
-    # Create a virtualenv and install Python dependencies
     venv = virtualenv_create(libexec, "python3.12")
     venv.pip_install "httpx"
     venv.pip_install "fastmcp"
 
-    # Install server and support files
     libexec.install "server.py"
     libexec.install "native-host"
     libexec.install "firefox-extension"
     libexec.install "Makefile"
     libexec.install ".env.local.example"
 
-    # Create wrapper script
     (bin/"jira-mcp-server").write <<~EOS
       #!/bin/bash
       exec "#{libexec}/bin/python3" "#{libexec}/server.py" "$@"

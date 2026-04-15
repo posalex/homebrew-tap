@@ -31,7 +31,7 @@ class JiraMcpServer < Formula
       (etc/"jira-mcp-server/.env.local").write(env_content)
     end
 
-    # If config exists (upgrade or JIRA_URL provided), build the extension
+    # If config exists (upgrade or JIRA_URL provided), build everything
     if (etc/"jira-mcp-server/.env.local").exist?
       ln_sf etc/"jira-mcp-server/.env.local", libexec/".env.local"
       cd libexec do
@@ -54,12 +54,12 @@ class JiraMcpServer < Formula
       <<~EOS
         Extension built and native host installed automatically.
 
-        Install the .xpi in Firefox Developer Edition:
+        Install the .xpi in Firefox Developer Edition (first time only):
           about:config -> set xpinstall.signatures.required to false
           about:addons -> gear icon -> Install Add-on From File...
           Select: #{opt_libexec}/build/jira-cookie-bridge.xpi
 
-        Configure your MCP client:
+        Configure your MCP client (first time only):
 
           Claude Code (project):  Add to .mcp.json:
             { "mcpServers": { "jira": { "command": "jira-mcp-server" } } }
@@ -70,38 +70,12 @@ class JiraMcpServer < Formula
           Claude Desktop:  Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
             { "mcpServers": { "jira": { "command": "#{opt_bin}/jira-mcp-server" } } }
 
-        Config: #{etc}/jira-mcp-server/.env.local (survives brew upgrade)
+        Config: #{etc}/jira-mcp-server/.env.local
       EOS
     else
       <<~EOS
-        To complete setup:
-
-        1. Configure your Jira instance:
-             cp #{opt_libexec}/.env.local.example #{etc}/jira-mcp-server/.env.local
-             $EDITOR #{etc}/jira-mcp-server/.env.local
-
-        2. Build the extension and install the native messaging host:
-             ln -sf #{etc}/jira-mcp-server/.env.local #{opt_libexec}/.env.local
-             cd #{opt_libexec} && make all
-
-        3. Install the .xpi in Firefox Developer Edition:
-             about:config -> set xpinstall.signatures.required to false
-             about:addons -> gear icon -> Install Add-on From File...
-             Select: #{opt_libexec}/build/jira-cookie-bridge.xpi
-
-        4. Configure your MCP client:
-
-           Claude Code (project):  Add to .mcp.json:
-             { "mcpServers": { "jira": { "command": "jira-mcp-server" } } }
-
-           Claude Code (global):
-             claude mcp add --scope user jira jira-mcp-server
-
-           Claude Desktop:  Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
-             { "mcpServers": { "jira": { "command": "#{opt_bin}/jira-mcp-server" } } }
-
-        Tip: To skip manual config, reinstall with:
-             JIRA_URL=https://jira.example.com brew reinstall posalex/tap/jira-mcp-server
+        Run this to configure and build everything:
+          JIRA_URL=https://your-jira-instance.com brew reinstall posalex/tap/jira-mcp-server
       EOS
     end
   end

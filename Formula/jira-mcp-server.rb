@@ -48,17 +48,17 @@ class JiraMcpServer < Formula
       To complete setup:
 
       1. Configure your Jira instance (skip if you set JIRA_URL during install):
-           cp #{libexec}/.env.local.example #{etc}/jira-mcp-server/.env.local
+           cp #{opt_libexec}/.env.local.example #{etc}/jira-mcp-server/.env.local
            $EDITOR #{etc}/jira-mcp-server/.env.local
 
       2. Symlink config and build the extension:
-           ln -sf #{etc}/jira-mcp-server/.env.local #{libexec}/.env.local
-           cd #{libexec} && make all
+           ln -sf #{etc}/jira-mcp-server/.env.local #{opt_libexec}/.env.local
+           cd #{opt_libexec} && make all
 
       3. Install the .xpi in Firefox Developer Edition:
            about:config -> set xpinstall.signatures.required to false
            about:addons -> gear icon -> Install Add-on From File...
-           Select: #{libexec}/build/jira-cookie-bridge.xpi
+           Select: #{opt_libexec}/build/jira-cookie-bridge.xpi
 
       4. Configure your MCP client:
 
@@ -69,7 +69,7 @@ class JiraMcpServer < Formula
            claude mcp add --scope user jira jira-mcp-server
 
          Claude Desktop:  Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
-           { "mcpServers": { "jira": { "command": "#{bin}/jira-mcp-server" } } }
+           { "mcpServers": { "jira": { "command": "#{opt_bin}/jira-mcp-server" } } }
 
       Tip: To pre-configure, install with:
            JIRA_URL=https://jira.example.com brew install posalex/tap/jira-mcp-server

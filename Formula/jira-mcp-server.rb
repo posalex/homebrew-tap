@@ -27,7 +27,7 @@ class JiraMcpServer < Formula
     # Homebrew filters env vars — HOMEBREW_* prefix passes through
     jira_url = ENV["HOMEBREW_JIRA_URL"] || ENV["JIRA_URL"]
     if jira_url && !(etc/"jira-mcp-server/.env.local").exist?
-      env_content = File.read(".env.local.example")
+      env_content = File.read(libexec/".env.local.example")
       env_content.gsub!("https://jira.example.com", jira_url)
       (etc/"jira-mcp-server/.env.local").write(env_content)
     end

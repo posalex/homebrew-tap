@@ -23,8 +23,9 @@ class JiraMcpServer < Formula
     # Config lives in etc/ so it survives brew upgrade
     (etc/"jira-mcp-server").mkpath
 
-    # Pre-populate from JIRA_URL env var if provided (first install only)
-    jira_url = ENV["JIRA_URL"]
+    # Pre-populate from env var if provided (first install only)
+    # Homebrew filters env vars — HOMEBREW_* prefix passes through
+    jira_url = ENV["HOMEBREW_JIRA_URL"] || ENV["JIRA_URL"]
     if jira_url && !(etc/"jira-mcp-server/.env.local").exist?
       env_content = File.read(".env.local.example")
       env_content.gsub!("https://jira.example.com", jira_url)
@@ -73,7 +74,7 @@ class JiraMcpServer < Formula
     else
       <<~EOS
         Run this to configure and build everything:
-          JIRA_URL=https://your-jira-instance.com brew reinstall posalex/tap/jira-mcp-server
+          HOMEBREW_JIRA_URL=https://your-jira-instance.com brew reinstall posalex/tap/jira-mcp-server
       EOS
     end
   end

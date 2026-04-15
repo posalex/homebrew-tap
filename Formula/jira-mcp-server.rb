@@ -20,8 +20,9 @@ class JiraMcpServer < Formula
     libexec.install "Makefile"
     libexec.install ".env.local.example"
 
-    # Build extension and package .xpi
+    # Copy example config so make build can render templates
     cd libexec do
+      cp ".env.local.example", ".env.local"
       system "make", "build"
       system "make", "xpi"
     end

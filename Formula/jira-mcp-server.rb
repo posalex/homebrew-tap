@@ -14,17 +14,22 @@ class JiraMcpServer < Formula
     venv.pip_install "httpx"
     venv.pip_install "fastmcp"
 
-    # Build extension and .xpi in source tree before installing
-    cp ".env.local.example", ".env.local"
-    system "make", "build"
-    system "make", "xpi"
+    # Write .env.local from JIRA_URL env var if provided
+    jira_url = ENV["JIRA_URL"]
+    if jira_url
+      jira_domain = jira_url.sub(%r{^https?://}, "")
+      env_content = File.read(".env.local.example")
+      env_content.gsub!("jira.example.com", jira_domain)
+      env_content.gsub!("https://jira.example.com", jira_url)
+      File.write(".env.local", env_content)
+    end
 
     libexec.install "server.py"
     libexec.install "native-host"
     libexec.install "firefox-extension"
     libexec.install "Makefile"
     libexec.install ".env.local.example"
-    libexec.install "build"
+    libexec.install ".env.local" if File.exist?(".env.local")
 
     (bin/"jira-mcp-server").write <<~EOS
       #!/bin/bash
@@ -37,20 +42,23 @@ class JiraMcpServer < Formula
     <<~EOS
       To complete setup:
 
-      1. Copy the example config and edit it:
+      1. Configure your Jira instance (skip if you set JIRA_URL during install):
            cp #{libexec}/.env.local.example #{libexec}/.env.local
            $EDITOR #{libexec}/.env.local
 
-      2. Install the native messaging host for Firefox:
-           cd #{libexec} && make install
+      2. Build the extension and install the native messaging host:
+           cd #{libexec} && make all
 
-      3. Load the Firefox extension in Firefox Developer Edition:
+      3. Install the .xpi in Firefox Developer Edition:
            about:config -> set xpinstall.signatures.required to false
            about:addons -> gear icon -> Install Add-on From File...
            Select: #{libexec}/build/jira-cookie-bridge.xpi
 
       4. Configure your MCP client to use:
            #{bin}/jira-mcp-server
+
+      Tip: To pre-configure, install with:
+           JIRA_URL=https://jira.example.com brew install posalex/tap/jira-mcp-server
     EOS
   end
 

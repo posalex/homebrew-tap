@@ -17,9 +17,7 @@ class JiraMcpServer < Formula
     # Write .env.local from JIRA_URL env var if provided
     jira_url = ENV["JIRA_URL"]
     if jira_url
-      jira_domain = jira_url.sub(%r{^https?://}, "")
       env_content = File.read(".env.local.example")
-      env_content.gsub!("jira.example.com", jira_domain)
       env_content.gsub!("https://jira.example.com", jira_url)
       File.write(".env.local", env_content)
     end

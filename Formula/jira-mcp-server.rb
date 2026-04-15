@@ -20,6 +20,12 @@ class JiraMcpServer < Formula
     libexec.install "Makefile"
     libexec.install ".env.local.example"
 
+    # Build extension and package .xpi
+    cd libexec do
+      system "make", "build"
+      system "make", "xpi"
+    end
+
     (bin/"jira-mcp-server").write <<~EOS
       #!/bin/bash
       exec "#{libexec}/bin/python3" "#{libexec}/server.py" "$@"
@@ -38,10 +44,10 @@ class JiraMcpServer < Formula
       2. Install the native messaging host for Firefox:
            cd #{libexec} && make install
 
-      3. Load the Firefox extension:
-           Firefox -> about:debugging -> Load Temporary Add-on
-           Select: #{libexec}/build/extension/manifest.json
-           Or with Firefox Developer Edition, install the .xpi directly.
+      3. Load the Firefox extension in Firefox Developer Edition:
+           about:config -> set xpinstall.signatures.required to false
+           about:addons -> gear icon -> Install Add-on From File...
+           Select: #{libexec}/build/jira-cookie-bridge.xpi
 
       4. Configure your MCP client to use:
            #{bin}/jira-mcp-server

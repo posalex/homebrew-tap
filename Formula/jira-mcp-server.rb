@@ -14,18 +14,17 @@ class JiraMcpServer < Formula
     venv.pip_install "httpx"
     venv.pip_install "fastmcp"
 
+    # Build extension and .xpi in source tree before installing
+    cp ".env.local.example", ".env.local"
+    system "make", "build"
+    system "make", "xpi"
+
     libexec.install "server.py"
     libexec.install "native-host"
     libexec.install "firefox-extension"
     libexec.install "Makefile"
     libexec.install ".env.local.example"
-
-    # Copy example config so make build can render templates
-    cd libexec do
-      cp ".env.local.example", ".env.local"
-      system "make", "build"
-      system "make", "xpi"
-    end
+    libexec.install "build"
 
     (bin/"jira-mcp-server").write <<~EOS
       #!/bin/bash

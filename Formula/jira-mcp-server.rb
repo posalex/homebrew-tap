@@ -2,7 +2,7 @@ class JiraMcpServer < Formula
   desc "Jira MCP server with Firefox cookie bridge extension"
   homepage "https://github.com/posalex/jira-mcp-server"
   url "https://github.com/posalex/jira-mcp-server/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "fd30b713ba14af9ff3f5c57783e01bb8c0659a7b439b2820972a2bcb9f96bd81"
+  sha256 "ad15502131f14d5e5bda34b8f7e824ba25b31bb70b609060e1d624742ba4daa7"
   license "GPL-3.0-or-later"
 
   depends_on "python@3.12"

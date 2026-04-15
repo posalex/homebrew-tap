@@ -32,6 +32,15 @@ class JiraMcpServer < Formula
       (etc/"jira-mcp-server/.env.local").write(env_content)
     end
 
+    (bin/"jira-mcp-server").write <<~EOS
+      #!/bin/bash
+      export ENV_FILE="#{etc}/jira-mcp-server/.env.local"
+      exec "#{libexec}/bin/python3" "#{libexec}/server.py" "$@"
+    EOS
+    chmod 0755, bin/"jira-mcp-server"
+  end
+
+  def post_install
     # If config exists (upgrade or JIRA_URL provided), build everything
     if (etc/"jira-mcp-server/.env.local").exist?
       ln_sf etc/"jira-mcp-server/.env.local", libexec/".env.local"
@@ -39,13 +48,6 @@ class JiraMcpServer < Formula
       system "make", "-C", libexec, "xpi"
       system "make", "-C", libexec, "install"
     end
-
-    (bin/"jira-mcp-server").write <<~EOS
-      #!/bin/bash
-      export ENV_FILE="#{etc}/jira-mcp-server/.env.local"
-      exec "#{libexec}/bin/python3" "#{libexec}/server.py" "$@"
-    EOS
-    chmod 0755, bin/"jira-mcp-server"
   end
 
   def caveats

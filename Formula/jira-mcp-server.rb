@@ -23,7 +23,7 @@ class JiraMcpServer < Formula
     # Config lives in etc/ so it survives brew upgrade
     (etc/"jira-mcp-server").mkpath
 
-    # Pre-populate from JIRA_URL env var if provided
+    # Pre-populate from JIRA_URL env var if provided (first install only)
     jira_url = ENV["JIRA_URL"]
     if jira_url && !(etc/"jira-mcp-server/.env.local").exist?
       env_content = File.read(".env.local.example")
@@ -31,12 +31,18 @@ class JiraMcpServer < Formula
       (etc/"jira-mcp-server/.env.local").write(env_content)
     end
 
-    # Symlink etc config into libexec so Makefile finds it
-    libexec.install_symlink etc/"jira-mcp-server/.env.local" if (etc/"jira-mcp-server/.env.local").exist?
+    # If config exists (upgrade or JIRA_URL provided), build the extension
+    if (etc/"jira-mcp-server/.env.local").exist?
+      ln_sf etc/"jira-mcp-server/.env.local", libexec/".env.local"
+      cd libexec do
+        system "make", "build"
+        system "make", "xpi"
+        system "make", "install"
+      end
+    end
 
     (bin/"jira-mcp-server").write <<~EOS
       #!/bin/bash
-      # Load config from Homebrew etc/ (survives upgrades)
       export ENV_FILE="#{etc}/jira-mcp-server/.env.local"
       exec "#{libexec}/bin/python3" "#{libexec}/server.py" "$@"
     EOS
@@ -44,39 +50,60 @@ class JiraMcpServer < Formula
   end
 
   def caveats
-    <<~EOS
-      To complete setup:
+    if (etc/"jira-mcp-server/.env.local").exist?
+      <<~EOS
+        Extension built and native host installed automatically.
 
-      1. Configure your Jira instance (skip if you set JIRA_URL during install):
-           cp #{opt_libexec}/.env.local.example #{etc}/jira-mcp-server/.env.local
-           $EDITOR #{etc}/jira-mcp-server/.env.local
+        Install the .xpi in Firefox Developer Edition:
+          about:config -> set xpinstall.signatures.required to false
+          about:addons -> gear icon -> Install Add-on From File...
+          Select: #{opt_libexec}/build/jira-cookie-bridge.xpi
 
-      2. Symlink config and build the extension:
-           ln -sf #{etc}/jira-mcp-server/.env.local #{opt_libexec}/.env.local
-           cd #{opt_libexec} && make all
+        Configure your MCP client:
 
-      3. Install the .xpi in Firefox Developer Edition:
-           about:config -> set xpinstall.signatures.required to false
-           about:addons -> gear icon -> Install Add-on From File...
-           Select: #{opt_libexec}/build/jira-cookie-bridge.xpi
+          Claude Code (project):  Add to .mcp.json:
+            { "mcpServers": { "jira": { "command": "jira-mcp-server" } } }
 
-      4. Configure your MCP client:
+          Claude Code (global):
+            claude mcp add --scope user jira jira-mcp-server
 
-         Claude Code (project):  Add to .mcp.json:
-           { "mcpServers": { "jira": { "command": "jira-mcp-server" } } }
+          Claude Desktop:  Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
+            { "mcpServers": { "jira": { "command": "#{opt_bin}/jira-mcp-server" } } }
 
-         Claude Code (global):
-           claude mcp add --scope user jira jira-mcp-server
+        Config: #{etc}/jira-mcp-server/.env.local (survives brew upgrade)
+      EOS
+    else
+      <<~EOS
+        To complete setup:
 
-         Claude Desktop:  Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
-           { "mcpServers": { "jira": { "command": "#{opt_bin}/jira-mcp-server" } } }
+        1. Configure your Jira instance:
+             cp #{opt_libexec}/.env.local.example #{etc}/jira-mcp-server/.env.local
+             $EDITOR #{etc}/jira-mcp-server/.env.local
 
-      Tip: To pre-configure, install with:
-           JIRA_URL=https://jira.example.com brew install posalex/tap/jira-mcp-server
+        2. Build the extension and install the native messaging host:
+             ln -sf #{etc}/jira-mcp-server/.env.local #{opt_libexec}/.env.local
+             cd #{opt_libexec} && make all
 
-      Note: Config is stored in #{etc}/jira-mcp-server/ and survives brew upgrade.
-            After upgrading, re-run step 2 to rebuild the extension.
-    EOS
+        3. Install the .xpi in Firefox Developer Edition:
+             about:config -> set xpinstall.signatures.required to false
+             about:addons -> gear icon -> Install Add-on From File...
+             Select: #{opt_libexec}/build/jira-cookie-bridge.xpi
+
+        4. Configure your MCP client:
+
+           Claude Code (project):  Add to .mcp.json:
+             { "mcpServers": { "jira": { "command": "jira-mcp-server" } } }
+
+           Claude Code (global):
+             claude mcp add --scope user jira jira-mcp-server
+
+           Claude Desktop:  Add to ~/Library/Application Support/Claude/claude_desktop_config.json:
+             { "mcpServers": { "jira": { "command": "#{opt_bin}/jira-mcp-server" } } }
+
+        Tip: To skip manual config, reinstall with:
+             JIRA_URL=https://jira.example.com brew reinstall posalex/tap/jira-mcp-server
+      EOS
+    end
   end
 
   test do

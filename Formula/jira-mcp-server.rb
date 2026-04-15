@@ -34,11 +34,9 @@ class JiraMcpServer < Formula
     # If config exists (upgrade or JIRA_URL provided), build everything
     if (etc/"jira-mcp-server/.env.local").exist?
       ln_sf etc/"jira-mcp-server/.env.local", libexec/".env.local"
-      cd libexec do
-        system "make", "build"
-        system "make", "xpi"
-        system "make", "install"
-      end
+      system "make", "-C", libexec, "build"
+      system "make", "-C", libexec, "xpi"
+      system "make", "-C", libexec, "install"
     end
 
     (bin/"jira-mcp-server").write <<~EOS

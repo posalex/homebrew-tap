@@ -3,16 +3,15 @@ class JiraMcpServer < Formula
 
   desc "Jira MCP server with Firefox cookie bridge and HTTP proxy for IDEs"
   homepage "https://github.com/posalex/jira-mcp-server"
-  url "https://github.com/posalex/jira-mcp-server/archive/refs/tags/v0.6.0.tar.gz"
-  sha256 "f8b78a920fc92542c1d0625f5a46ecf3f773fb64ee0dd351644304a8309f2274"
+  url "https://github.com/posalex/jira-mcp-server/archive/refs/tags/v0.6.1.tar.gz"
+  sha256 "f19d983823bf7b653e79d16ffb8bdc13eea2285135e9632d7a7d9886d14fbce7"
   license "GPL-3.0-or-later"
 
   depends_on "python@3.12"
 
   def install
     venv = virtualenv_create(libexec, "python3.12")
-    venv.pip_install "httpx"
-    venv.pip_install "fastmcp"
+    system libexec/"bin/python3", "-m", "pip", "install", "httpx", "fastmcp"
 
     libexec.install "server.py"
     libexec.install "proxy.py"

@@ -46,14 +46,16 @@ class JiraMcpServer < Formula
       ln_sf etc/"jira-mcp-server/.env.local", libexec/".env.local"
       system "make", "-C", libexec, "build"
       system "make", "-C", libexec, "xpi"
-      system "make", "-C", libexec, "install"
     end
   end
 
   def caveats
     if (etc/"jira-mcp-server/.env.local").exist?
       <<~EOS
-        Extension built and native host installed automatically.
+        Extension built automatically.
+
+        Install the native messaging host (first time only):
+          make -C #{opt_libexec} install
 
         Install the .xpi in Firefox Developer Edition (first time only):
           about:config -> set xpinstall.signatures.required to false

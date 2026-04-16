@@ -5,10 +5,10 @@
 # Koffeinum repo. A fresh clone of the tap will have a PLACEHOLDER value until
 # that target has run at least once.
 cask "koffeinum" do
-  version "1.0.1"
-  sha256 "ce986fdbb379cb2339c702c9bf5591f6ebebff40b73368fcf89ccb0cbcd0746b"
+  version "1.0.2"
+  sha256 "d1343779f3b680abf8089065b5f3a65a0edb529addc16a975d3b1c15df2229e0"
 
-  url "https://github.com/posalex/Koffeinum/releases/download/v1.0.1/Koffeinum.zip"
+  url "https://github.com/posalex/Koffeinum/releases/download/v1.0.2/Koffeinum.zip"
   name "Koffeinum"
   desc "macOS menu bar app that prevents your Mac from sleeping"
   homepage "https://github.com/posalex/Koffeinum"

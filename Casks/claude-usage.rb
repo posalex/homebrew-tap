@@ -1,13 +1,13 @@
 cask "claude-usage" do
-  version "1.0.0"
-  sha256 "1f03e1bbfbe3c344ae09bd1abae287c549d227f89f2406c769203211841a8d15"
+  version "1.1.0"
+  sha256 "f4564b21ec9aefe0271dcdbb07cb8901abd8221487445b5433210ecd6050d08d"
 
   url "https://github.com/posalex/ClaudeUsage/releases/download/v#{version}/ClaudeUsage.zip"
   name "Claude Usage"
-  desc "macOS menu bar widget showing claude.ai subscription usage and rate limits"
+  desc "macOS menu bar widget showing Claude, Fable, and Codex usage limits"
   homepage "https://github.com/posalex/ClaudeUsage"
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: ">= :sequoia"
 
   app "ClaudeUsage.app"
 

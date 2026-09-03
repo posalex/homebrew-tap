@@ -1,6 +1,6 @@
 cask "claude-usage" do
-  version "1.1.0"
-  sha256 "f4564b21ec9aefe0271dcdbb07cb8901abd8221487445b5433210ecd6050d08d"
+  version "1.1.1"
+  sha256 "87ab753263c55dcdebf208d7b7f079a10f9218ea079f58e73c74c3d737c1a4b9"
 
   url "https://github.com/posalex/ClaudeUsage/releases/download/v#{version}/ClaudeUsage.zip"
   name "Claude Usage"

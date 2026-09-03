@@ -7,7 +7,7 @@ cask "claude-usage" do
   desc "macOS menu bar widget showing Claude, Fable, and Codex usage limits"
   homepage "https://github.com/posalex/ClaudeUsage"
 
-  depends_on macos: ">= :sequoia"
+  depends_on macos: :sequoia
 
   app "ClaudeUsage.app"
 
